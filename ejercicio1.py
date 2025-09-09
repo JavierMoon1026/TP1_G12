@@ -35,12 +35,12 @@ def descorrelacion(x):
 
     cov = np.cov(x_centrado, rowvar=False)
 
-    eigval, eigvec = np.linalg.eigh(cov)
+    autoval, autovec = np.linalg.eigh(cov)
 
-    idx = np.argsort(eigval)[::1]
-    eigvec = eigvec[:, idx]
+    idx = np.argsort(autoval)[::1] #indices de las posiciones ordenadas
+    autovec = autovec[:, idx]
 
-    return x_centrado @ eigvec
+    return x_centrado @ autovec #producto entre los datos centrados y los autovectores
 
 def graficar_descorrelacion(x, titulo="Imagen - Vectores descorrelacionados"):
     plt.figure(figsize=(5,5))
