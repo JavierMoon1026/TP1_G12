@@ -48,8 +48,34 @@ def descomprimir(matriz_Y_k,Media_X, VT_k):
 
 
 
-path=r"C:\\Users\\valen\\OneDrive\\Escritorio\\UDESA\\segundo anio\\segundo semestre\\inferencia y estimacion\\tp1\\TP1_G12\\img_01.jpg"
+path=r"img_01.jpg"
+
+# Comprimir la imagen en las 3 matrices y, mu, vt
 y,mu,vt=comprimir(path,8)
-descomprimir(y,mu,vt)
+
+# Descomprimir la imagen y reconstruir la matriz de bloques
+X_reconstruida = descomprimir(y, mu, vt)
+
+# Reconstruir la imagen completa a partir de los bloques
+def reconstruir_imagen(bloques, tam_bloque, alto, ancho):
+    img_rec = np.zeros((alto, ancho), dtype=np.uint8)
+    idx = 0
+    for i in range(0, alto, tam_bloque):
+        for j in range(0, ancho, tam_bloque):
+            if idx < len(bloques):
+                bloque = bloques[idx].reshape(tam_bloque, tam_bloque, order='F')
+                img_rec[i:i+tam_bloque, j:j+tam_bloque] = np.clip(bloque, 0, 255)
+                idx += 1
+    return img_rec
+
+# Obtener dimensiones originales
+Imagen_escalada = Escala_de_grises(path)
+alto, ancho = Imagen_escalada.shape
+
+# Reconstruir y mostrar la imagen
+img_final = reconstruir_imagen(X_reconstruida, 8, alto, ancho)
+cv2.imshow('Imagen Reconstruida', img_final.astype(np.uint8))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 
